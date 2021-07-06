@@ -1,0 +1,9 @@
+.ccls-cache
+
+/build
+/cmake-build-debug
+/compile_commands.json
+/src/.ccls-cache
+
+
+
