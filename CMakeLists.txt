@@ -45,14 +45,14 @@ endif ()
 
 project (rcbuild
 	VERSION ${rcbuild_version_major}.${rcbuild_version_minor}.${rcbuild_version_patch}
-	LANGUAGES C)
+	LANGUAGES CXX)
 
 option (COMPILE_COMMANDS "cmake export compile commands" OFF)
 option (CODE_COVERAGE    "Enable code coverage for the project" OFF)
 option (ENABLE_TEST      "Enable Unit-Testing for the project" OFF)
 
-set (CMAKE_C_STANDARD 99)
-set (CMAKE_C_STANDARD_REQUIRED ON)
+set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 # Baseline settings

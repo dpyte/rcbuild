@@ -1,25 +1,18 @@
 ﻿
+add_subdirectory("lib/toml11")
 
 # Target build
 set (Executable rcbuild)
-
-add_library (toml99
-	STATIC
-	lib/tomlc99/toml.c)
-
 # Sources
 set (USOURCES
-	main.c
-	mem.c
-	path.c
-	path_sc.c
-	process.c
-	details.h
-	ApplicationVersion.h)
+		main.cxx
+		PathSC.cxx
+		Path.cxx
+		ApplicationVersion.hxx
+		Details.hxx)
 
 add_executable (${Executable} ${USOURCES})
 
 # "We have a mole on our hands"
-target_link_libraries (${Executable} PUBLIC toml99)
-target_include_directories (${Executable} PUBLIC lib/tomlc99)
-set_target_properties(rcbuild PROPERTIES LINKER_LANGUAGE C)
+set_target_properties(rcbuild PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(rcbuild PUBLIC toml11)
