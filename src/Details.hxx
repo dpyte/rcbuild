@@ -7,4 +7,6 @@
 #define RCEXTERN extern
 #endif
 
+static constexpr auto RCBUILD_MAX = 32;
+
 #endif //RCBUILD_DETAILS_HXX

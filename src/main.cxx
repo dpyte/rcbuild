@@ -1,6 +1,7 @@
 #include <iostream>
-#include <toml.hpp>
 #include "Path.hxx"
+#include <toml.hpp>
+#include "RcGenSources.hxx"
 
 int main(int argc, const char **argv) {
 
@@ -16,8 +17,9 @@ int main(int argc, const char **argv) {
     if (stage_one) {
         std::fprintf(stderr, "Attempting to read from the file '%s' ... ",
             path_to_rcbuild.c_str());
-        auto data = toml::parse(path_to_rcbuild);
-        std::fprintf(stderr, "success!\n");
+        auto rc_gen =  RCGenSources(path_to_rcbuild);
+        std::fprintf(stderr, "%s\n", rc_gen.status() ? "success" : "failure");
+        const auto t = rc_gen.construct_table();
     }
 
     return 0;
