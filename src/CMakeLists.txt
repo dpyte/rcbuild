@@ -1,5 +1,4 @@
 ﻿
-set (toml11_BUILD_TEST ON CACHE BOOL "" FORCE)
 add_subdirectory("lib/toml11")
 
 # Target build
@@ -7,11 +6,13 @@ set (Executable rcb)
 # Sources
 set (USOURCES
 		main.cxx
-		RcGenSources.cxx
-		PathSC.cxx
 		Path.cxx
+		PathSC.cxx
+		RcError.cxx
+		RcGenSources.cxx
+		RcValues.cxx
 		ApplicationVersion.hxx
-		Details.hxx RcValues.cxx RcValues.hxx)
+		Details.hxx )
 
 add_executable (${Executable} ${USOURCES})
 

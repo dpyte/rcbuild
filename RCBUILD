@@ -2,7 +2,7 @@ title = "ReckonOs: Calculator Operating System"
 
 [projects]
     [projects.project_1]
-        project_name = "llvm"
+        # project_name = "llvm"
         fetch_src = "https://github.com/llvm/llvm-project.git"
         fetch_type = GIT
         location = "{RCBUILD_PATH}/toolchain"
