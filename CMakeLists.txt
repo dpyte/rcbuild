@@ -50,6 +50,7 @@ project (rcbuild
 option (COMPILE_COMMANDS "cmake export compile commands" OFF)
 option (CODE_COVERAGE    "Enable code coverage for the project" OFF)
 option (ENABLE_TEST      "Enable Unit-Testing for the project" OFF)
+option (TOML11_TEST "Enable testing for TOML11" OFF)
 
 set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -68,6 +69,8 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
       "RelWithDebInfo")
 endif ()
 
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
 ##################################
 #    Configuration options
 ##################################
@@ -75,7 +78,9 @@ if (COMPILE_COMMANDS)
 	set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif()
 
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+if (TOML11_TEST)
+    set (toml11_BUILD_TEST ON CACHE BOOL "" FORCE)
+endif ()
 
 if (ENABLE_TEST)
   find_package (Boost 1.48
