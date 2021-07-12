@@ -1,10 +1,13 @@
 #include "Path.hxx"
+#include "RcError.hxx"
+#include <exception>
 
 void Path::set_path(std::string &rcbuild) {
     char path[path_max];
     if (getcwd(path, sizeof(path)) == nullptr) {
-        std::fprintf(stderr, "error <internal> :: getcwd() error\n");
-        exit (EXIT_FAILURE);
+        RcError::rc_report_error(RcError::FATAL,
+            "error <internal> :: getcwd() error \n");
+        std::terminate();
     }
     rcbuild = std::string(path);
 }

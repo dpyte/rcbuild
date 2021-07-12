@@ -9,6 +9,14 @@
 #include "RcValues.hxx"
 #include "Details.hxx"
 
+enum TABLE_VALUES {
+    FETCH_SRC,
+    FETCH_TYPE,
+    GIT_DEPTH,
+    LOCATION,
+    PROJECT_NAME,
+};
+
 class RCGenSources {
 private:
     using RcValueTable_Ptr = std::shared_ptr<RcValues>;

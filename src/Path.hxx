@@ -7,10 +7,11 @@
 #include <unistd.h>
 #endif
 
-#include <cstring>
 #include <climits>
 #include <cstddef>
+#include <cstring>
 #include <memory>
+#include <string>
 #include "Details.hxx"
 
 namespace Path {

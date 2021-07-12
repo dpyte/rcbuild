@@ -18,20 +18,19 @@ private:
     std::string fetch_src;
     std::string fetch_type;
     std::string location;
+    int git_depth;
 
 public:
     RcValues() = default;
-    explicit RcValues(
-                    std::string title_name,
-                    std::string pname,
-                    std::string fsources,
-                    std::string loc);
-
+    explicit RcValues(std::string pname);
 
     // !TODO: redo push to something more appropriate
-    void push_sources(const std::string &source);
-    void push_location(const std::string &loc);
-    void push_project_name(const std::string &pname);
+    void push_fetch_src(std::string fsrc);
+    void push_fetch_type(std::string ftype);
+    void push_location(std::string loc);
+    void push_project_name(std::string pname);
+    void push_sources(std::string source);
+    void push_git_depth(int dp);
 };
 
 
