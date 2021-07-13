@@ -1,12 +1,10 @@
 #include "Path.hxx"
 #include "PathSC.hxx"
 #include "RcError.hxx"
-#include <sstream>
-#include <unordered_map>
-#include <vector>
-#include <filesystem>
 #include <algorithm>
-
+#include <filesystem>
+#include <iostream>
+#include <vector>
 
 namespace fs = std::filesystem;
 
@@ -16,13 +14,6 @@ enum RC_MACRO_TABLE {
     RCBUILD_PATH_LEVEL_DOWN_N,
     NIL,
 };
-
-static const std::unordered_map<const char *, RC_MACRO_TABLE> RC_MACRO_MAP = {
-    {"RCBUILD_PATH", RCBUILD_PATH},
-    {"RCBUILD_PATH_LEVEL_UP_", RCBUILD_PATH_LEVEL_UP_N},
-    {"RCBUILD_PATH_LEVEL_DOWN_", RCBUILD_PATH_LEVEL_DOWN_N},
-};
-
 
 // implementing an entire state-machine will be a huge waste of processing
 // power ...
@@ -67,6 +58,20 @@ static bool rc_is_valid_dot_path(const std::string &pt) {
     return false;
 }
 
+static std::string rc_generate_dot_levels(int lvl) {
+    static const std::string dots = "..";
+    std::string funny_looking_path;
+    for (auto iter = 0; iter < lvl; iter++)
+        funny_looking_path += dots;
+    return dots;
+}
+
+static std::string rc_infer_sys_path(const char *path_type, const std::string &prev_path) {
+    const fs::path fs_path = prev_path + "/" + std::string(path_type);
+    const auto gen_path = fs::canonical(fs_path);
+    return gen_path.string();
+}
+
 static std::string rc_infer_path_from_macro(RC_MACRO_TABLE macro, const std::string &prev_path,
                                             const std::string &macro_path) {
     switch (macro) {
@@ -77,28 +82,18 @@ static std::string rc_infer_path_from_macro(RC_MACRO_TABLE macro, const std::str
             } else {
                 // !FIXME: improve this message
                 RcError::rc_report_error(RcError::FATAL,
-                                         "invalid use of macro <RCBUILD_PATH>\n\tRCBUILD_PATH must be placed before any other path");
+                    "invalid use of macro <RCBUILD_PATH>\n\tRCBUILD_PATH must be placed before any other path");
             }
         } break;
-        case RCBUILD_PATH_LEVEL_UP_N:
-            break;
+        case RCBUILD_PATH_LEVEL_UP_N: {
+            const auto level = std::stoi(macro_path.substr(22, macro_path.length()));
+            const auto sys_path = prev_path + rc_generate_dot_levels(level);
+            const auto new_path = fs::canonical(sys_path).string();
+            return std::move(new_path);
+        } break;
         case RCBUILD_PATH_LEVEL_DOWN_N:
             break;
     }
-}
-
-static void rc_fix_path(std::string &rc_path, const std::string &new_path) {
-    const fs::path rc_prev_path = rc_path;
-    const fs::path rc_new_path = new_path;
-}
-
-#include <iostream>
-static std::string rc_infer_sys_path(const char *path_type, const std::string &prev_path) {
-    std::string sys_path;
-    const fs::path fs_path = prev_path + "/" + std::string(path_type);
-    const auto gen_path = fs::canonical(fs_path);
-    std::cerr << "generated path >> " << gen_path << '\n';
-    return sys_path;
 }
 
 std::string RcPath::rc_infer_path(const std::string &path) {
@@ -122,10 +117,9 @@ std::string RcPath::rc_infer_path(const std::string &path) {
             rc_path += rc_infered_macro_path;
         } else {
             const auto is_valid_dot_path = rc_is_valid_dot_path(pt);
-            if (is_valid_dot_path) rc_fix_path(rc_path, rc_infer_sys_path(pt.c_str(), rc_path));
+            if (is_valid_dot_path) rc_path = rc_infer_sys_path(pt.c_str(), rc_path);
             else rc_path += pt;
         }
     }
-    std::cerr << "constructed path: " << rc_path << '\n';
     return rc_path;
 }
