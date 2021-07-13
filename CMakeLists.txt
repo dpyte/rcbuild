@@ -22,32 +22,13 @@ endif ()
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list (APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
-if (NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-  message (STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-  file (DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/v0.16.1/conan.cmake"
-                "${CMAKE_BINARY_DIR}/conan.cmake"
-                EXPECTED_HASH SHA256=396e16d0f5eabdc6a14afddbcfff62a54a7ee75c6da23f32f7a31bc85db23484
-                TLS_VERIFY ON)
-endif()
-
-include (${CMAKE_BINARY_DIR}/conan_paths.cmake)
 include (ExternalProject)
-
-find_package (CCache)
-
-if (CCache_FOUND)
-  message ("Detected ccache. Using ccache for faster recompilation")
-  option (RCBUILD_CCACHE_COMPILATION "using ccache for faster recompilation" ON)
-  if (RCBUILD_CCACHE_COMPILATION)
-    set_property (GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCache_EXECUTABLE}")
-  endif ()
-endif ()
 
 project (rcbuild
 	VERSION ${rcbuild_version_major}.${rcbuild_version_minor}.${rcbuild_version_patch}
 	LANGUAGES CXX)
 
-option (COMPILE_COMMANDS "cmake export compile commands" OFF)
+option (COMPILE_COMMANDS "cmake export compile commands" ON)
 option (CODE_COVERAGE    "Enable code coverage for the project" OFF)
 option (ENABLE_TEST      "Enable Unit-Testing for the project" OFF)
 option (TOML11_TEST "Enable testing for TOML11" OFF)
@@ -91,12 +72,29 @@ endif ()
 
 set (BUILD_SHARED_LIBS ON)
 
+include (CheckCXXCompilerFlag)
+
+check_cxx_compiler_flag (-fno-builtin HAVE_FNO_BUILTIN)
+check_cxx_compiler_flag (-fstack-protector-strong HAS_STACK_PROTECTOR_STRONG)
+
+if (HAVE_FNO_BUILTIN)
+  add_compile_options (-fno-builtin)
+endif ()
+
+if (HAS_STACK_PROTECTOR_STRONG)
+  add_compile_options (-fstack-protector-strong)
+  link_libraries (-fstack-protector-strong)
+endif ()
+# additional compiler options
+
+add_compile_options (-Wstrict-overflow=2)
+
 ##################################
 #    Platform agnostic options
 ##################################
 if (MSVC)
-	# message (FATAL_ERROR "Compiling this project using MSVC is not supported. Please download MinGW64.")
-	message (WARNING "Compiling using MSVC")
+  message (FATAL_ERROR "Compiling this project using MSVC is not supported (yet)")
+# 	message (WARNING "Compiling using MSVC")
 endif ()
 
 if (NOT MSVC)
