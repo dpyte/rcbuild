@@ -1,8 +1,9 @@
+#include "PathSC.hxx"
+#include "RcError.hxx"
 #include "RcGenSources.hxx"
+#include <chrono>
 #include <iostream>
 #include <thread>
-#include <chrono>
-#include "RcError.hxx"
 
 #define EMPTY_SPACE std::cout << '\n';
 
@@ -88,15 +89,14 @@ static void print_packages(const std::vector<std::pair<TABLE_VALUES, bool>> &tb,
 static void rc_option_details(const std::string &pname,
     std::string const &option,
     std::string const &val) {
-    rc_sleep_for(128);
+    rc_sleep_for(50);
     RcError::rc_report_error(RcError::MESSAGE,
-        "<%s> %s: %s", pname.c_str(), option.c_str(), val.c_str());
+                             "<%s> %s: %s \r", pname.c_str(), option.c_str(), val.c_str());
 }
 
 static void populate_values(std::string const &str,
     toml::value const &tml,
-    std::vector<std::pair<TABLE_VALUES, bool>> const &detected_values)
-{
+    std::vector<std::pair<TABLE_VALUES, bool>> const &detected_values) {
     RcValueTable_Ptr val = std::make_shared<RcValues>();
     for (const auto& dv : detected_values) {
         const auto dv_first = dv.first;
@@ -125,6 +125,7 @@ static void populate_values(std::string const &str,
                     const auto location = toml::find<std::string>(tml, "location");
                     val->push_location(location);
                     rc_option_details(str, "location", location);
+                    RcPath::rc_infer_path(location);
                     EMPTY_SPACE
                 } break;
                 case PROJECT_NAME: {
