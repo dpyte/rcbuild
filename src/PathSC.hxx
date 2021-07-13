@@ -8,6 +8,10 @@
 #ifndef PATH_SC_H
 #define PATH_SC_H
 
+#include "Details.hxx"
+#include <string>
 
-
-#endif // PATH_SC_H
+namespace RcPath {
+    std::string rc_infer_path(const std::string &path);
+}
+#endif //PATH_SC_H
