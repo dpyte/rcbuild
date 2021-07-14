@@ -4,3 +4,6 @@
 [submodule "src/lib/toml11"]
 	path = src/lib/toml11
 	url = https://github.com/ToruNiina/toml11.git
+[submodule "src/lib/libgit2"]
+	path = src/lib/libgit2
+	url = https://github.com/libgit2/libgit2.git
