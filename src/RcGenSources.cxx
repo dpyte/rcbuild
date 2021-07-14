@@ -123,9 +123,9 @@ static void populate_values(std::string const &str,
                 } break;
                 case LOCATION: {
                     const auto location = toml::find<std::string>(tml, "location");
-                    val->push_location(location);
                     rc_option_details(str, "location", location);
-                    RcPath::rc_infer_path(location);
+                    const auto infered_location = RcPath::rc_infer_path(location);
+                    val->push_location(infered_location);
                     EMPTY_SPACE
                 } break;
                 case PROJECT_NAME: {

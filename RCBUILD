@@ -1,12 +1,18 @@
-title = "rcbuild: add/ fetch packages to your project"
+title = "ReckonOs: Calculator Operating System"
 
 [projects]
     [projects.project_1]
+        project_name = "libgit2"
+        fetch_src = "https://github.com/libgit2/libgit2.git"
+        fetch_type = "GIT"
+        location = "{RCBUILD_PATH}/../src/lib"
+        git_depth = 2
+
+    [projects.project_2]
         project_name = "llvm"
         fetch_src = "https://github.com/llvm/llvm-project.git"
         fetch_type = "GIT"
-        location = "{RCBUILD_PATH}/toolchain"
+        location = "{RCBUILD_PATH_LEVEL_UP_6}/../toolchain"
 
         # settings
         git_depth = 2
-

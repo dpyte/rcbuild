@@ -55,6 +55,8 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 ##################################
 #    Configuration options
 ##################################
+set (CMAKE_AUTOMOC ON)
+
 if (COMPILE_COMMANDS)
 	set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif()
