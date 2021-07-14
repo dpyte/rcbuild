@@ -1,4 +1,4 @@
-title = "ReckonOs: Calculator Operating System"
+title = "rcbuild: add/ fetch packages to your project"
 
 [projects]
     [projects.project_1]
