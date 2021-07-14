@@ -19,7 +19,7 @@ enum RC_MACRO_TABLE {
 // power ...
 // - true: is RC_PATH else not
 static RC_MACRO_TABLE rc_path_validation(const std::string_view path, std::string &path_type) {
-    RC_MACRO_TABLE return_macro = RC_MACRO_TABLE::NIL;
+    auto return_macro = RC_MACRO_TABLE::NIL;
     if (path.size() <= 1) return RC_MACRO_TABLE::NIL;
     const auto f_char = path.at(0) == '{';
     const auto s_char = path.at(path.size() - 1) == '}';
@@ -51,7 +51,7 @@ static RC_MACRO_TABLE rc_path_validation(const std::string_view path, std::strin
 }
 
 static bool rc_is_valid_dot_path(const std::string &pt) {
-    const auto len = pt.length();
+    if (pt.at(0) != '.') return false;
     const auto dot_count = std::count(pt.begin(), pt.end(), '.');
     if (dot_count <= 2) return true;
     else RcError::rc_report_error(RcError::FATAL, "invalid use of relative path '%s'\n", pt.c_str());
@@ -61,9 +61,13 @@ static bool rc_is_valid_dot_path(const std::string &pt) {
 static std::string rc_generate_dot_levels(int lvl) {
     static const std::string dots = "..";
     std::string funny_looking_path;
-    for (auto iter = 0; iter < lvl; iter++)
+    bool gate = false;
+    for (auto iter = 0; iter < lvl; iter++) {
+        if (iter == 0) gate = true;
         funny_looking_path += dots;
-    return dots;
+        if (gate) funny_looking_path += "/";
+    }
+    return std::move(funny_looking_path);
 }
 
 static std::string rc_infer_sys_path(const char *path_type, const std::string &prev_path) {
@@ -89,11 +93,20 @@ static std::string rc_infer_path_from_macro(RC_MACRO_TABLE macro, const std::str
             const auto level = std::stoi(macro_path.substr(22, macro_path.length()));
             const auto sys_path = prev_path + rc_generate_dot_levels(level);
             const auto new_path = fs::canonical(sys_path).string();
-            return std::move(new_path);
+            return new_path;
         } break;
         case RCBUILD_PATH_LEVEL_DOWN_N:
+            // !NOTE: spaces in the following message is well intended.
+            RcError::rc_report_error(RcError::WARNING,
+                "RCBUILD_LEVEL_DOWN_N macro is not supported at the time and will be removed in future release.\n\t  "
+                " Please refrain from using this macro any further\n\t   terminating\n");
+            std::abort();
+            break;
+        case NIL:
+            // So you have chosen NIL
             break;
     }
+    return std::string();
 }
 
 std::string RcPath::rc_infer_path(const std::string &path) {
@@ -118,7 +131,7 @@ std::string RcPath::rc_infer_path(const std::string &path) {
         } else {
             const auto is_valid_dot_path = rc_is_valid_dot_path(pt);
             if (is_valid_dot_path) rc_path = rc_infer_sys_path(pt.c_str(), rc_path);
-            else rc_path += pt;
+            else rc_path += "/" + pt;
         }
     }
     return rc_path;
