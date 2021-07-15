@@ -9,6 +9,7 @@ set (USOURCES
 	main.cxx
 	Path.cxx
 	PathSC.cxx
+	RcAsyncInstall.cxx
 	RcError.cxx
 	RcFetchSrc.cxx
 	RcGenSources.cxx
@@ -21,3 +22,4 @@ add_executable (${Executable} ${USOURCES})
 # "We have a mole on our hands"
 set_target_properties (rcb PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries (rcb PUBLIC toml11)
+target_link_libraries (rcb PUBLIC git2)

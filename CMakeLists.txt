@@ -65,6 +65,11 @@ if (TOML11_TEST)
     set (toml11_BUILD_TEST ON CACHE BOOL "" FORCE)
 endif ()
 
+## libgit2 options
+set (BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
+set (USE_HTTPS ON CACHE BOOL "" FORCE)
+set (USE_BUNDLED_ZLIB ON CACHE BOOL "" FORCE)
+
 if (ENABLE_TEST)
   find_package (Boost 1.48
     COMPONENTS unit_test_framework
@@ -90,6 +95,7 @@ endif ()
 # additional compiler options
 
 add_compile_options (-Wstrict-overflow=2)
+add_compile_options (-Wno-dev)
 
 ##################################
 #    Platform agnostic options
