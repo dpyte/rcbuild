@@ -20,7 +20,7 @@ int main(int argc, const char **argv) {
         auto rc_gen =  RCGenSources(path_to_rcbuild);
         RcError::rc_report_error(rc_gen.status() ? RcError::MESSAGE : RcError::FATAL,
             "%s\n", rc_gen.status() ? "success!" : "failure");
-        const auto t = rc_gen.construct_table();
+        const auto rc_gen_table = rc_gen.construct_table();
     }
 
     return 0;
