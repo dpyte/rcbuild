@@ -1,5 +1,6 @@
 #include "PathSC.hxx"
 #include "RcError.hxx"
+#include "RcFetchSrc.hxx"
 #include "RcGenSources.hxx"
 #include <chrono>
 #include <iostream>
@@ -163,3 +164,4 @@ std::vector<RcValueTable_Ptr> RCGenSources::construct_table() {
     }
     return value_table;
 }
+

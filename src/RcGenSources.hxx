@@ -2,12 +2,14 @@
 #ifndef RCBUILD_RCGENSOURCES_HXX
 #define RCBUILD_RCGENSOURCES_HXX
 
-#include <vector>
+#include "Details.hxx"
+#include "RcValues.hxx"
 #include <array>
 #include <string>
 #include <toml.hpp>
-#include "RcValues.hxx"
-#include "Details.hxx"
+#include <vector>
+
+using RcValueTable_Ptr = std::shared_ptr<RcValues>;
 
 enum TABLE_VALUES {
     FETCH_SRC,
@@ -19,8 +21,6 @@ enum TABLE_VALUES {
 
 class RCGenSources {
 private:
-    using RcValueTable_Ptr = std::shared_ptr<RcValues>;
-
     std::string rc_path_to_config;
     toml::value parse_file;
     std::vector<RcValueTable_Ptr> value_table;
@@ -32,6 +32,7 @@ public:
     [[nodiscard]] bool status() const noexcept;
 
     [[nodiscard]] std::vector<RcValueTable_Ptr> construct_table();
+
 };
 
 
