@@ -1,7 +1,11 @@
 #include "RcFetchSrc.hxx"
 #include "RcError.hxx"
 
+#if defined(__NT__) || defined(_WIN64)
+#include "lib/libgit2/include/git2.h"
+#else
 #include <git2.h>
+#endif
 
 // !TODO: replace this method with something that is more verbose.
 //     -> Like a progress bar (?)
