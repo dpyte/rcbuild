@@ -31,6 +31,13 @@ public:
     void push_project_name(std::string pname);
     void push_sources(std::string source);
     void push_git_depth(int dp);
+
+    [[nodiscard]] std::string rcv_title() const;
+    [[nodiscard]] std::string rcv_project_name() const;
+    [[nodiscard]] std::string rcv_fetch_src() const;
+    [[nodiscard]] std::string rcv_fetch_type() const;
+    [[nodiscard]] std::string rcv_location() const;
+    [[nodiscard]] int rcv_git_depth() const;
 };
 
 
