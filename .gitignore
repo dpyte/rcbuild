@@ -1,9 +1,12 @@
 .ccls-cache
 
 /.idea
+/.vs
 /build
+/build-msvc
 /cmake-build-debug
 /compile_commands.json
+/out
 /src/.ccls-cache
 
 
