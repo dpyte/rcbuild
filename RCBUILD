@@ -1,4 +1,4 @@
-title = "ReckonOs: Calculator Operating System"
+title = "rcb: minimal package installer"
 
 [projects]
     [projects.project_1]
