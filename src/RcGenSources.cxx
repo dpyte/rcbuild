@@ -94,7 +94,7 @@ static void rc_option_details(const std::string &pname,
                              "<%s> %s: %s \r", pname.c_str(), option.c_str(), val.c_str());
 }
 
-static void populate_values(std::string const &str,
+static RcValueTable_Ptr populate_values(std::string const &str,
     toml::value const &tml,
     std::vector<std::pair<TABLE_VALUES, bool>> const &detected_values) {
     RcValueTable_Ptr val = std::make_shared<RcValues>();
@@ -136,6 +136,7 @@ static void populate_values(std::string const &str,
             }
         }
     }
+    return val;
 }
 
 std::vector<RcValueTable_Ptr> RCGenSources::construct_table() {
@@ -159,8 +160,8 @@ std::vector<RcValueTable_Ptr> RCGenSources::construct_table() {
         const auto &project_number = toml::find(projects, project_name);
         const auto detected_values = rc_table_detect_values(project_number);
         print_packages(detected_values, number_of_projects.second.at(iter));
-        populate_values(project_name, project_number, detected_values);
+        const auto rc_populated_values = populate_values(project_name, project_number, detected_values);
+        value_table.emplace_back(rc_populated_values);
     }
     return value_table;
 }
-
