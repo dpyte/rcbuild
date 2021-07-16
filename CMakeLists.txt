@@ -32,6 +32,7 @@ option (COMPILE_COMMANDS "cmake export compile commands" ON)
 option (CODE_COVERAGE    "Enable code coverage for the project" OFF)
 option (ENABLE_TEST      "Enable Unit-Testing for the project" OFF)
 option (TOML11_TEST "Enable testing for TOML11" OFF)
+option (GIT2_TEST "Enable testing for libgit2" OFF)
 
 set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -62,7 +63,11 @@ if (COMPILE_COMMANDS)
 endif()
 
 if (TOML11_TEST)
-    set (toml11_BUILD_TEST ON CACHE BOOL "" FORCE)
+  set (toml11_BUILD_TEST ON CACHE BOOL "" FORCE)
+endif ()
+
+if (GIT2_TEST)
+  set (BUILD_CLAR ON CACHE BOOL "" FORCE)
 endif ()
 
 ## libgit2 options
@@ -81,28 +86,31 @@ set (BUILD_SHARED_LIBS ON)
 
 include (CheckCXXCompilerFlag)
 
-check_cxx_compiler_flag (-fno-builtin HAVE_FNO_BUILTIN)
-check_cxx_compiler_flag (-fstack-protector-strong HAS_STACK_PROTECTOR_STRONG)
+if (NOT MSVC)
+  check_cxx_compiler_flag (-fno-builtin HAVE_FNO_BUILTIN)
+  check_cxx_compiler_flag (-fstack-protector-strong HAS_STACK_PROTECTOR_STRONG)
 
-if (HAVE_FNO_BUILTIN)
-  add_compile_options (-fno-builtin)
-endif ()
+  if (HAVE_FNO_BUILTIN)
+    add_compile_options (-fno-builtin)
+  endif ()
 
-if (HAS_STACK_PROTECTOR_STRONG)
-  add_compile_options (-fstack-protector-strong)
-  link_libraries (-fstack-protector-strong)
+  if (HAS_STACK_PROTECTOR_STRONG)
+    add_compile_options (-fstack-protector-strong)
+    link_libraries (-fstack-protector-strong)
+  endif ()
 endif ()
 # additional compiler options
 
-add_compile_options (-Wstrict-overflow=2)
-add_compile_options (-Wno-dev)
+if (NOT MSVC)
+  add_compile_options (-Wstrict-overflow=2)
+  add_compile_options (-Wno-dev)
+endif ()
 
 ##################################
 #    Platform agnostic options
 ##################################
 if (MSVC)
-  message (FATAL_ERROR "Compiling this project using MSVC is not supported (yet)")
-# 	message (WARNING "Compiling using MSVC")
+  message ("Compiling this project using MSVC")
 endif ()
 
 if (NOT MSVC)
