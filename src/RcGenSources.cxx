@@ -1,6 +1,5 @@
 #include "PathSC.hxx"
 #include "RcError.hxx"
-#include "RcFetchSrc.hxx"
 #include "RcGenSources.hxx"
 #include <chrono>
 #include <iostream>
